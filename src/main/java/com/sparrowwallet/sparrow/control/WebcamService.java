@@ -336,14 +336,14 @@ public class WebcamService extends ScheduledService<Image> {
     }
 
     private Result readQR(BufferedImage bufferedImage) {
-        try {
-            com.sparrowwallet.bokmakierie.Result result = bokmakierie.scan(bufferedImage);
-            if(result != null) {
-                return new Result(result.getMessage(), result.getRawBytes(), new ResultPoint[0], BarcodeFormat.QR_CODE);
-            }
-        } catch(Exception e) {
-            log.debug("Error scanning QR", e);
-        }
+//        try {
+//            com.sparrowwallet.bokmakierie.Result result = bokmakierie.scan(bufferedImage);
+//            if(result != null) {
+//                return new Result(result.getMessage(), result.getRawBytes(), new ResultPoint[0], BarcodeFormat.QR_CODE);
+//            }
+//        } catch(Exception e) {
+//            log.debug("Error scanning QR", e);
+//        }
 
         if(ZBar.isEnabled()) {
             ZBar.Scan scan = ZBar.scan(bufferedImage);
@@ -352,14 +352,15 @@ public class WebcamService extends ScheduledService<Image> {
             }
         }
 
-        try {
-            LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
-            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-            return qrReader.decode(bitmap, Map.of(DecodeHintType.TRY_HARDER, Boolean.TRUE));
-        } catch(ReaderException e) {
-            // fall thru, it means there is no QR code in image
-            return null;
-        }
+        return null; // NOTE: Need to return null here because the following code is commented out.
+//        try {
+//            LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
+//            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+//            return qrReader.decode(bitmap, Map.of(DecodeHintType.TRY_HARDER, Boolean.TRUE));
+//        } catch(ReaderException e) {
+//            // fall thru, it means there is no QR code in image
+//            return null;
+//        }
     }
 
     private BufferedImage getFramedImage(BufferedImage image, CroppedDimension cropped) {
